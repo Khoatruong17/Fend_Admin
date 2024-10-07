@@ -1,8 +1,7 @@
 {
   "name": "vite-project",
   "author": {
-    "name": "Hỏi Dân IT",
-    "url": "https://hoidanit.vn"
+    "name": "Khoa Truong"
   },
   "private": true,
   "version": "0.0.0",
@@ -15,6 +14,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "1.7.2",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
