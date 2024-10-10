@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "./util/axios.customize";
-import Headers from "./components/header";
+import Headers from "./components/layout/header";
 import { Outlet } from "react-router-dom";
 
 function App() {

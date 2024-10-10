@@ -1,14 +1,23 @@
-import { Table } from "antd";
+import { Table, Spin, Descriptions, notification } from "antd";
 import { useState, useEffect } from "react";
+import { LoadingOutlined } from "@ant-design/icons";
 import { getAllUserApi } from "../util/api";
+import React from "react";
+
 const userPage = () => {
   const [dataSource, setDataSource] = useState([]);
-
+  var [loading, setLoading] = React.useState(true);
   useEffect(() => {
     const fetchUsers = async () => {
       const res = await getAllUserApi();
-      if (res) {
+      if (!res?.message) {
         setDataSource(res.data);
+        setLoading(false);
+      } else {
+        notification.error({
+          message: "Unauthorized",
+          description: res.message,
+        });
       }
     };
     fetchUsers();
@@ -36,13 +45,14 @@ const userPage = () => {
   return (
     <div style={{ padding: 25 }}>
       user page
-      <Table
-        bordered
-        dataSource={dataSource}
-        columns={columns}
-        rowKey={"_id"}
-      />
-      ;
+      <Spin spinning={loading} indicator={<LoadingOutlined spin />}>
+        <Table
+          bordered
+          dataSource={dataSource}
+          columns={columns}
+          rowKey={"_id"}
+        />
+      </Spin>
     </div>
   );
 };
