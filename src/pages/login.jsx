@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
-import { Button, Form, Input, notification } from "antd";
+import { Button, Form, Input, notification, Card, Divider } from "antd";
 import { loginUserApi } from "../util/api";
 import { useNavigate } from "react-router-dom";
+import { GoogleOutlined } from '@ant-design/icons';
 import { AuthContext } from "../components/context/auth.context";
 
 const loginPage = () => {
@@ -33,54 +34,85 @@ const loginPage = () => {
     }
   };
   return (
-    <div style={{ margin: 50 }}>
-      <Form
-        name="basic"
-        labelCol={{
-          span: 8,
-        }}
-        wrapperCol={{
-          span: 16,
-        }}
-        style={{
-          maxWidth: 600,
-        }}
-        onFinish={onFinish}
-        autoComplete="off"
-        layout="vertical"
-      >
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[
-            {
-              required: true,
-              message: "Please input your email!",
-            },
-          ]}
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+      backgroundColor: '#f0f2f5'
+    }}>
+      <Card style={{ width: 600, borderRadius: 20 }}>
+        <h2 style={{
+          textAlign: 'center',
+          fontSize: '38px',         // Kích thước chữ lớn hơn
+          fontWeight: 'bold',       // Đậm hơn
+          marginBottom: '24px'      // Khoảng cách dưới tiêu đề
+        }}>
+          Login
+        </h2>
+        <Form
+          name="login"
+          layout="vertical"
+          onFinish={onFinish}
         >
-          <Input />
-        </Form.Item>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[{ required: true, message: 'Please input your email!' }]}
+          >
+            <Input size="large" />
+          </Form.Item>
 
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Please input your password!",
-            },
-          ]}
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: 'Please input your password!' }]}
+          >
+            <Input.Password size="large" />
+          </Form.Item>
+
+
+
+
+          <p style={{
+            color: '#1890ff',
+            textAlign: 'left',
+            cursor: 'pointer',
+            fontSize: '14px',
+            marginTop: '8px',
+            marginBottom: '20px'
+          }}>
+            Forgot Password?
+          </p>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit" style={{ width: '100%', height: 40 }}>
+              Login
+            </Button>
+          </Form.Item>
+        </Form>
+
+        <Divider>Or</Divider>
+
+        <Button
+          type="default"
+          icon={<GoogleOutlined />}
+          style={{ width: '100%', height: 40 }}
         >
-          <Input.Password />
-        </Form.Item>
+          Login with Google
+        </Button>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Login
-          </Button>
-        </Form.Item>
-      </Form>
+        <p style={{
+          textAlign: 'center',
+          marginTop: '16px',
+          color: '#1890ff',
+          cursor: 'pointer'
+        }}
+          onClick={() => navigate('/register')}
+        >
+          Don't have an account? Register
+        </p>
+      </Card>
     </div>
   );
 };

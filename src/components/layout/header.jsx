@@ -80,7 +80,13 @@ const Header = () => {
       selectedKeys={[current]}
       mode="horizontal"
       items={items}
-      style={{ justifyContent: "space-between" }}
+      style={{
+        justifyContent: "space-between",
+        fontSize: "18px",       
+        height: "60px",         
+        lineHeight: "60px",     
+        padding: "0 20px"       
+      }}
     />
   );
 };
