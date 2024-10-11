@@ -29,7 +29,6 @@ const registerPage = () => {
         type: "error",
       });
     }
-    console.log(">> Success:", values);
   };
   return (
     <div style={{

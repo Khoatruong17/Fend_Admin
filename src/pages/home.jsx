@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button } from 'antd';
+import { Link } from 'react-router-dom';
+import { AuthContext } from "../components/context/auth.context";
 
 const HomePage = () => {
+  const { auth, setAuth } = useContext(AuthContext);
   return (
     <div style={{
       display: 'flex',
@@ -27,12 +30,18 @@ const HomePage = () => {
       }}>
         Please log in to access the admin section and manage the content. Ensure secure and effective administration of our platform.
       </p>
-      <Button type="primary" size="large" style={{ marginTop: '20px' }}>
-        Login to Continue
-      </Button>
+      {!auth.isAuthenticated && (
+        <Link to="/login">
+          <Button type="primary" size="large" style={{ marginTop: '20px' }}>
+            Login to Continue
+          </Button>
+        </Link>
+      )}
+
+
     </div>
   );
-  
+
 };
 
 export default HomePage;

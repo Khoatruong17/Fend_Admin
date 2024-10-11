@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext,useEffect } from "react";
 import { Button, Form, Input, notification, Card, Divider } from "antd";
 import { loginUserApi } from "../util/api";
 import { useNavigate } from "react-router-dom";
@@ -6,8 +6,14 @@ import { GoogleOutlined } from '@ant-design/icons';
 import { AuthContext } from "../components/context/auth.context";
 
 const loginPage = () => {
+  
   const navigate = useNavigate();
-  const { setAuth } = useContext(AuthContext);
+  const { auth, setAuth } = useContext(AuthContext);
+  useEffect(() => {
+    if (auth.isAuthenticated) {
+      navigate(`/`);
+    }
+  }, [auth.isAuthenticated]);
   const onFinish = async (values) => {
     const { email, password } = values;
     const res = await loginUserApi(email, password);
@@ -84,34 +90,13 @@ const loginPage = () => {
           }}>
             Forgot Password?
           </p>
-
+          
           <Form.Item>
             <Button type="primary" htmlType="submit" style={{ width: '100%', height: 40 }}>
               Login
             </Button>
           </Form.Item>
         </Form>
-
-        <Divider>Or</Divider>
-
-        <Button
-          type="default"
-          icon={<GoogleOutlined />}
-          style={{ width: '100%', height: 40 }}
-        >
-          Login with Google
-        </Button>
-
-        <p style={{
-          textAlign: 'center',
-          marginTop: '16px',
-          color: '#1890ff',
-          cursor: 'pointer'
-        }}
-          onClick={() => navigate('/register')}
-        >
-          Don't have an account? Register
-        </p>
       </Card>
     </div>
   );

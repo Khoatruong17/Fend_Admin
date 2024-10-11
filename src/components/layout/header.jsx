@@ -14,11 +14,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const items = [
-    {
-      label: <Link to={"/"}>Home Page</Link>,
-      key: "home",
-      icon: <MailOutlined />,
-    },
+    
     ...(auth.isAuthenticated
       ? [
           {
@@ -34,7 +30,11 @@ const Header = () => {
             style: { marginLeft: "0" }, // Đẩy UserMenu sang phải
           },
         ]
-      : []),
+      : [{
+        label: <Link to={"/"}>Home Page</Link>,
+        key: "home",
+        icon: <MailOutlined />,
+      },]),
 
     ...(auth.isAuthenticated
       ? [
