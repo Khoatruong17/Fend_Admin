@@ -1,0 +1,42 @@
+.footer {
+  background-color: #f8f9fa;
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 20px;
+  font-size: 14px;
+  color: #333;
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.fLists {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  margin-bottom: 20px;
+}
+
+.fList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1; /* Allow lists to grow equally */
+  min-width: 120px; /* Minimum width for better responsiveness */
+}
+
+.fListItem {
+  margin-bottom: 10px;
+  color: #003580;
+  cursor: pointer;
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.fListItem:hover {
+  color: #0056b3; /* Change color on hover */
+}
+
+.fText {
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+}

@@ -44,9 +44,9 @@ const loginPage = () => {
       <Card style={{ width: 600, borderRadius: 20 }}>
         <h2 style={{
           textAlign: 'center',
-          fontSize: '38px',         // Kích thước chữ lớn hơn
-          fontWeight: 'bold',       // Đậm hơn
-          marginBottom: '24px'      // Khoảng cách dưới tiêu đề
+          fontSize: '38px',         
+          fontWeight: 'bold',       
+          marginBottom: '24px'  
         }}>
           Login
         </h2>

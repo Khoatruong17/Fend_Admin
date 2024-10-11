@@ -18,20 +18,21 @@ const HomePage = () => {
         fontWeight: 'bold',
         color: '#333'
       }}>
-        Welcome to Our Website!
+        Welcome to the Admin Dashboard!
       </h1>
       <p style={{
         fontSize: '18px',
         color: '#666',
         maxWidth: '600px'
       }}>
-        This is your go-to place for the latest updates, news, and more. Explore our features and enjoy your stay!
+        Please log in to access the admin section and manage the content. Ensure secure and effective administration of our platform.
       </p>
       <Button type="primary" size="large" style={{ marginTop: '20px' }}>
-        Get Started
+        Login to Continue
       </Button>
     </div>
   );
+  
 };
 
 export default HomePage;
