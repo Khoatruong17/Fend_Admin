@@ -23,4 +23,9 @@ const getAllUserApi = () => {
   const URL_API = "/v1/api/getAllUsers";
   return axios.get(URL_API);
 };
-export { createUserApi, loginUserApi, getAllUserApi };
+
+const getUserByIdApi = (userId) => {
+  const URL_API = `/v1/api/users/${userId}`;
+  return axios.get(URL_API);
+};
+export { createUserApi, loginUserApi, getAllUserApi, getUserByIdApi };

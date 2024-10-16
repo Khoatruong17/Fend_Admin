@@ -7,7 +7,12 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RegisterPage from "./pages/register.jsx";
 import LoginPage from "./pages/login.jsx";
 import UserPage from "./pages/user.jsx";
-import HomePage from "./pages/home.jsx";
+import HostPage from "./pages/host/hostPage.jsx";
+import AdminPage from "./pages/admin/adminPage.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
+import RedirectToRolePage from "./components/context/RedirectToRolePage.jsx";
+
+import ProtectedRoute from "./components/context/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -15,12 +20,32 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/user",
-        element: <UserPage />,
+        path: "/", // Root path redirects based on role
+        element: <RedirectToRolePage />,
       },
       {
-        index: true,
-        element: <HomePage />,
+        path: "host",
+        element: (
+          <ProtectedRoute roleRequired="host">
+            <HostPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "admin",
+        element: (
+          <ProtectedRoute roleRequired="admin">
+            <AdminPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/notfound",
+        element: <NotFoundPage />,
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
   },

@@ -14,27 +14,11 @@ const Header = () => {
   const navigate = useNavigate();
 
   const items = [
-    
-    ...(auth.isAuthenticated
-      ? [
-          {
-            label: "User",
-            key: "UserMenu",
-            icon: <UserOutlined />,
-            children: [
-              {
-                label: <Link to={"/user"}>All Users</Link>,
-                key: "user",
-              },
-            ],
-            style: { marginLeft: "0" }, // Đẩy UserMenu sang phải
-          },
-        ]
-      : [{
-        label: <Link to={"/"}>Home Page</Link>,
-        key: "home",
-        icon: <MailOutlined />,
-      },]),
+    {
+      label: "RentNest",
+      key: "UserMenu",
+      style: { marginLeft: "0" }, // Đẩy UserMenu sang phải
+    },
 
     ...(auth.isAuthenticated
       ? [
@@ -42,7 +26,7 @@ const Header = () => {
             label: (
               <span
                 onClick={() => {
-                  localStorage.clear("token");
+                  localStorage.removeItem("token"); // Clear the specific token item
                   setAuth({
                     isAuthenticated: false,
                     user: {
@@ -50,7 +34,8 @@ const Header = () => {
                       username: "",
                     },
                   });
-                  navigate("/");
+                  console.log(">>check", auth);
+                  navigate("/login");
                 }}
               >
                 Log out: {auth?.user?.username ?? "User"}
@@ -81,10 +66,10 @@ const Header = () => {
       items={items}
       style={{
         justifyContent: "space-between",
-        fontSize: "18px",       
-        height: "60px",         
-        lineHeight: "60px",     
-        padding: "0 20px"       
+        fontSize: "18px",
+        height: "60px",
+        lineHeight: "60px",
+        padding: "0 20px",
       }}
     />
   );

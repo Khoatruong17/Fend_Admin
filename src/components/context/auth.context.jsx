@@ -1,28 +1,35 @@
 import { createContext, useState } from "react";
 
-// Create the context
 export const AuthContext = createContext({
   isAuthenticated: false,
+  role: "",
   user: {
     email: "",
     username: "",
   },
+  isAdmin: () => false,
+  isHost: () => false,
 });
 
-// Create a wrapper component
 export const AuthWrapper = (props) => {
   const [auth, setAuth] = useState({
     isAuthenticated: false,
+    role: "",
     user: {
       email: "",
       username: "",
     },
   });
 
-  const [appLoading , setAppLoading] = useState(true);
+  const isAdmin = auth.role === "admin";
+  const isHost = auth.role === "host";
+
+  const [appLoading, setAppLoading] = useState(true);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, appLoading , setAppLoading }}>
+    <AuthContext.Provider
+      value={{ auth, setAuth, appLoading, setAppLoading, isAdmin, isHost }}
+    >
       {props.children}
     </AuthContext.Provider>
   );
