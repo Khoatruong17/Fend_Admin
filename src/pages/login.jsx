@@ -31,7 +31,7 @@ const LoginPage = () => {
         role: res?.role ?? "",
         user: {
           email: res?.email ?? "",
-          username: res?.name ?? "",
+          username: res?.username ?? "",
         },
       });
       navigate(`/${rolePath}`);

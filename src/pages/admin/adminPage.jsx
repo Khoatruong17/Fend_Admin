@@ -1,38 +1,60 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import {
   LaptopOutlined,
   NotificationOutlined,
   UserOutlined,
+  DashboardOutlined,
+  LineChartOutlined,
+  SettingOutlined
 } from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Layout, Menu, theme } from "antd";
+import HostTable from "./hostComponent";
+import Dashboard from "./dashBroadComponent";
+import { motion, AnimatePresence } from "framer-motion"; // Import Framer Motion
+
 const { Header, Content, Footer, Sider } = Layout;
 
-const items2 = [
+const items = [
+  {
+    key: "dashboard",
+    icon: <DashboardOutlined />,
+    label: "Dashboard",
+  },
   {
     key: "sub1",
     icon: <UserOutlined />,
-    label: "User Admin",
+    label: "User Management",
     children: [
-      { key: "1", label: "User Information" },
-      { key: "2", label: "Address" },
-    ],
-  },
-  {
-    key: "sub2",
-    icon: <LaptopOutlined />,
-    label: "Manager",
-    children: [
-      { key: "3", label: "Add Property" },
-      { key: "4", label: "Property List" },
+      { key: "1", label: "List Hosts" },
+      { key: "2", label: "List Users" },
+      { key: "3", label: "Manage Bans" },
     ],
   },
   {
     key: "sub3",
     icon: <NotificationOutlined />,
-    label: "Comment",
+    label: "Comments",
     children: [
-      { key: "5", label: "Comment List" },
-      { key: "6", label: "Moderate Comments" },
+      { key: "4", label: "Comment List" },
+      { key: "5", label: "Moderate Comments" },
+    ],
+  },
+  {
+    key: "sub4",
+    icon: <LineChartOutlined />,
+    label: "Statistics",
+    children: [
+      { key: "6", label: "Revenue Reports" },
+      { key: "7", label: "User Statistics" },
+    ],
+  },
+  {
+    key: "sub5",
+    icon: <SettingOutlined />,
+    label: "Settings",
+    children: [
+      { key: "8", label: "System Settings" },
+      { key: "9", label: "Manage Promotions" },
     ],
   },
 ];
@@ -42,7 +64,7 @@ const App = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const [selectedKey, setSelectedKey] = useState("1");
+  const [selectedKey, setSelectedKey] = useState("dashboard");
 
   const onSelect = (e) => {
     setSelectedKey(e.key);
@@ -50,34 +72,50 @@ const App = () => {
 
   const renderContent = () => {
     switch (selectedKey) {
+      case "dashboard":
+        return <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 2 }} exit={{ opacity: 0 }}>
+          <Dashboard/>
+        </motion.div>;
       case "1":
-        return <div>User Roles Content</div>;
+        return <motion.div key="1" initial={{ opacity: 0 }} animate={{ opacity: 2 }} exit={{ opacity: 0 }}>
+          <h1>Host Management</h1>
+          <HostTable />
+        </motion.div>;
       case "2":
-        return <div>User Roles Content</div>;
+        return <motion.div key="2" initial={{ opacity: 0 }} animate={{ opacity: 2 }} exit={{ opacity: 0 }}>
+          <h1>User Management</h1>
+        </motion.div>;
       case "3":
-        return <div>Property List Content</div>;
-      case "4":
-        return <div>Add Property Content</div>;
-      case "5":
-        return <div>Comment List Content</div>;
-      case "6":
-        return <div>Moderate Comments Content</div>;
+        return <motion.div key="3" initial={{ opacity: 0 }} animate={{ opacity: 2 }} exit={{ opacity: 0 }}>
+          <h1>Manage Bans</h1>
+        </motion.div>;
       default:
-        return <div>Select an option from the menu.</div>;
+        return <motion.div key="default" initial={{ opacity: 0 }} animate={{ opacity: 2 }} exit={{ opacity: 0 }}>
+          Select an option from the menu.
+        </motion.div>;
     }
   };
 
   return (
-    <Layout>
+    <Layout style={{ minHeight: "100vh" }}>
       <Content
         style={{
           padding: "1px 1px",
           background: colorBgContainer,
         }}
       >
+        <h1 style={{
+          fontSize: '36px',
+          fontWeight: 'bold',
+          textAlign: 'left',
+          margin: '5px 5px 1px 50px',
+          padding: '15px 0'
+        }}>
+          Admin Manager
+        </h1>
         <Layout
           style={{
-            padding: "24px ",
+            padding: "24px",
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
           }}
@@ -90,27 +128,30 @@ const App = () => {
           >
             <Menu
               mode="inline"
-              defaultSelectedKeys={["1"]}
+              defaultSelectedKeys={["dashboard"]}
               onSelect={onSelect}
               style={{
                 height: "100%",
               }}
-              items={items2}
+              items={items}
             />
           </Sider>
           <Content
             style={{
               padding: "0 24px",
-              minHeight: 280,
+              background: colorBgContainer,
             }}
           >
-            {renderContent()}
+            <AnimatePresence mode="wait">
+              {renderContent()}
+            </AnimatePresence>
           </Content>
         </Layout>
       </Content>
       <Footer
         style={{
           textAlign: "center",
+          backgroundColor: colorBgContainer,
         }}
       >
         RentNest ©{new Date().getFullYear()} Created by Khoa Truong

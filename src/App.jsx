@@ -13,7 +13,6 @@ function App() {
     const fetchAccount = async () => {
       setAppLoading(true);
       const res = await axios.get(`/v1/api/account`);
-      console.log("Check res APP.jsx: ", res.EC);
       if (res.EC === 0) {
         setAuth({
           isAuthenticated: true,
@@ -22,8 +21,7 @@ function App() {
             email: res?.email ?? "",
             username: res?.name ?? "",
           },
-        });
-        console.log("Check auth APP.jsx", auth);
+        });  
       }
       setAppLoading(false);
     };
