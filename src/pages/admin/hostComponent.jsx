@@ -197,7 +197,7 @@ const HostTable = () => {
 
 
             <Modal
-                title="Edit Host"
+                title="Set Permission"
                 visible={isModalVisible}
                 onOk={handleModalOk}
                 onCancel={handleModalCancel}
@@ -220,7 +220,6 @@ const HostTable = () => {
                 </Form>
             </Modal>
 
-            {/* Add Host Modal */}
             <Modal
                 title="Add Host"
                 visible={isAddHostModalVisible}
