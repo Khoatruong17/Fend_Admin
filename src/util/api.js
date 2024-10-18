@@ -28,4 +28,16 @@ const getUserByIdApi = (userId) => {
   const URL_API = `/v1/api/users/${userId}`;
   return axios.get(URL_API);
 };
-export { createUserApi, loginUserApi, getAllUserApi, getUserByIdApi };
+
+const updateUserByIdApi = (userId, data) => {
+  const URL_API = `/v1/api/updateUsers/${userId}`;
+  return axios.put(URL_API, data);
+};
+
+export {
+  createUserApi,
+  loginUserApi,
+  getAllUserApi,
+  getUserByIdApi,
+  updateUserByIdApi,
+};

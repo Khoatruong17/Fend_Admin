@@ -5,11 +5,11 @@ import {
   UserOutlined,
   DashboardOutlined,
   LineChartOutlined,
-  SettingOutlined
+  SettingOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
 import HostTable from "./hostComponent";
-import Dashboard from "./dashBroadComponent";
+import Dashboard from "./dashBroadAdminComponent";
 import { motion, AnimatePresence } from "framer-motion"; // Import Framer Motion
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -73,26 +73,61 @@ const App = () => {
   const renderContent = () => {
     switch (selectedKey) {
       case "dashboard":
-        return <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 2 }} exit={{ opacity: 0 }}>
-          <Dashboard/>
-        </motion.div>;
+        return (
+          <motion.div
+            key="dashboard"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 2 }}
+            exit={{ opacity: 0 }}
+          >
+            <Dashboard />
+          </motion.div>
+        );
       case "1":
-        return <motion.div key="1" initial={{ opacity: 0 }} animate={{ opacity: 2 }} exit={{ opacity: 0 }}>
-          <h1>Host Management</h1>
-          <HostTable />
-        </motion.div>;
+        return (
+          <motion.div
+            key="1"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 2 }}
+            exit={{ opacity: 0 }}
+          >
+            <h1>Host Management</h1>
+            <HostTable />
+          </motion.div>
+        );
       case "2":
-        return <motion.div key="2" initial={{ opacity: 0 }} animate={{ opacity: 2 }} exit={{ opacity: 0 }}>
-          <h1>User Management</h1>
-        </motion.div>;
+        return (
+          <motion.div
+            key="2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 2 }}
+            exit={{ opacity: 0 }}
+          >
+            <h1>User Management</h1>
+          </motion.div>
+        );
       case "3":
-        return <motion.div key="3" initial={{ opacity: 0 }} animate={{ opacity: 2 }} exit={{ opacity: 0 }}>
-          <h1>Manage Bans</h1>
-        </motion.div>;
+        return (
+          <motion.div
+            key="3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 2 }}
+            exit={{ opacity: 0 }}
+          >
+            <h1>Manage Bans</h1>
+          </motion.div>
+        );
       default:
-        return <motion.div key="default" initial={{ opacity: 0 }} animate={{ opacity: 2 }} exit={{ opacity: 0 }}>
-          Select an option from the menu.
-        </motion.div>;
+        return (
+          <motion.div
+            key="default"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 2 }}
+            exit={{ opacity: 0 }}
+          >
+            Select an option from the menu.
+          </motion.div>
+        );
     }
   };
 
@@ -104,13 +139,15 @@ const App = () => {
           background: colorBgContainer,
         }}
       >
-        <h1 style={{
-          fontSize: '36px',
-          fontWeight: 'bold',
-          textAlign: 'left',
-          margin: '5px 5px 1px 50px',
-          padding: '15px 0'
-        }}>
+        <h1
+          style={{
+            fontSize: "36px",
+            fontWeight: "bold",
+            textAlign: "left",
+            margin: "5px 5px 1px 50px",
+            padding: "15px 0",
+          }}
+        >
           Admin Manager
         </h1>
         <Layout
@@ -142,9 +179,7 @@ const App = () => {
               background: colorBgContainer,
             }}
           >
-            <AnimatePresence mode="wait">
-              {renderContent()}
-            </AnimatePresence>
+            <AnimatePresence mode="wait">{renderContent()}</AnimatePresence>
           </Content>
         </Layout>
       </Content>

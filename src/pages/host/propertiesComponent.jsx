@@ -1,25 +1,23 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Table, Spin, Button, Modal, Input, notification } from "antd";
 import { AuthContext } from "../../components/context/auth.context";
-import { getUserByIdApi, updateUserByIdApi } from "../../util/api";
+import { getUserByIdApi } from "../../util/api"; // Ensure updateUserByIdApi is imported
 
-const InforHoster = () => {
+const PropertiesPage = () => {
   const { auth, setAuth, appLoading, setAppLoading } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState();
   const [editingField, setEditingField] = useState(null);
   const [newValue, setNewValue] = useState("");
 
   useEffect(() => {
-    if (editingField !== null) {
-      startEditing(); // Đặt giá trị mặc định khi mở Modal
-    }
     const fetchAccount = async () => {
       const userId = localStorage.getItem("userId");
       const res = await getUserByIdApi(userId);
+      console.log(res);
       setUserInfo(res);
     };
     fetchAccount();
-  }, [editingField, setAuth, setAppLoading]);
+  }, [setAuth, setAppLoading]);
 
   const handleEdit = (field, currentValue) => {
     setEditingField(field);
@@ -29,7 +27,7 @@ const InforHoster = () => {
   const handleSave = async () => {
     try {
       const updatedUser = { ...userInfo, [editingField]: newValue };
-      const res = await updateUserByIdApi(userInfo._id, updatedUser); // Update the user with the new value
+      await updateUserByIdApi(userInfo._id, updatedUser); // Update the user with the new value
       setUserInfo(updatedUser);
       setEditingField(null);
       setNewValue("");
@@ -42,21 +40,21 @@ const InforHoster = () => {
 
   const columns = [
     {
-      title: "Info",
+      title: "Thông tin",
       dataIndex: "info",
       key: "info",
     },
     {
-      title: "Value",
+      title: "Giá trị",
       dataIndex: "value",
       key: "value",
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       render: (text, record) => (
         <Button onClick={() => handleEdit(record.key, record.value)}>
-          Edit
+          Chỉnh sửa
         </Button>
       ),
     },
@@ -65,36 +63,28 @@ const InforHoster = () => {
   const data = userInfo
     ? [
         {
-          key: "username",
-          info: "Username",
-          value: userInfo.username || "",
+          key: "name",
+          info: "Tên người dùng",
+          value: userInfo.name || "Chưa có dữ liệu",
         },
         {
           key: "email",
           info: "Email",
-          value: userInfo.email || "",
+          value: userInfo.email || "Chưa có dữ liệu",
         },
         {
           key: "phone",
-          info: "PhoneNumber",
-          value: userInfo.phone || "",
+          info: "Số điện thoại",
+          value: userInfo.phone || "Chưa có dữ liệu",
         },
         {
           key: "role",
-          info: "Role",
-          value: userInfo.role || "",
+          info: "Vai trò",
+          value: userInfo.role || "Chưa có dữ liệu",
         },
-        {
-          key: "password",
-          info: "Password",
-          value: "****************",
-        },
+        // Add more fields if needed
       ]
     : [];
-
-  const startEditing = () => {
-    setNewValue("");
-  };
 
   return (
     <>
@@ -113,26 +103,12 @@ const InforHoster = () => {
       ) : data.length > 0 ? (
         <>
           <Table dataSource={data} columns={columns} pagination={false} />
-
-          <Modal
-            title={`Edit ${editingField}`}
-            open={editingField !== null}
-            onOk={newValue ? handleSave : null} // Gọi hàm handleSave khi có giá trị nhập
-            onCancel={() => setEditingField(null)}
-            okButtonProps={{ disabled: !newValue }} // Vô hiệu hóa nút OK khi giá trị trống
-          >
-            <Input
-              value={newValue}
-              onChange={(e) => setNewValue(e.target.value)}
-              placeholder={`Input new values for ${editingField}`}
-            />
-          </Modal>
         </>
       ) : (
-        <>No Host Information.</>
+        <>Không có thông tin người dùng.</>
       )}
     </>
   );
 };
 
-export default InforHoster;
+export default PropertiesPage;
