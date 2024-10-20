@@ -3,8 +3,6 @@ import { Table, Tag, Space, Input, Button, Popconfirm, Modal, Form, Switch, noti
 import { getAllHostApi, createHostApi } from "../../util/admin/apiAdmin"; // Import createHostApi
 import 'antd/dist/reset.css';
 
-
-
 const { Search } = Input;
 
 const HostTable = () => {

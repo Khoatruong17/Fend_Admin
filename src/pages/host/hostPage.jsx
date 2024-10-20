@@ -14,6 +14,7 @@ const { Header, Content, Footer, Sider } = Layout;
 import InforHoster from "./inforHosterPage";
 import Dashboard from "./dashBroadHostComponent";
 import AddPropertiesFrom from "./addPropertyComponent";
+import PropertiesPage from "./propertiesComponent"
 
 const items = [
   {
@@ -104,7 +105,7 @@ const App = () => {
             animate={{ opacity: 2 }}
             exit={{ opacity: 0 }}
           >
-            <h1>User Management</h1>
+            <PropertiesPage/>
           </motion.div>
         );
       case "3":
