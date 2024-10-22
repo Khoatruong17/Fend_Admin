@@ -73,10 +73,11 @@ const PropertiesPage = () => {
 
   const handleEdit = (property) => {
     setSelectedPT(property);
+    console.log(property);
     form.setFieldsValue({
       name: property.name, // Property name
       description: property.description, // Property description
-      address: property.location, // Property address
+      location: property.location,
       amenities: property.amenities || [], // Pre-select amenities
       is_active: property.is_active,
     });
