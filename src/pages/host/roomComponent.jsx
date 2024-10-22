@@ -212,10 +212,7 @@ const PropertiesPage = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
-      console.log(selectedPT._id);
-      console.log(values);
       const responseData = await updateProperty(selectedPT._id, values);
-      console.log(responseData);
       if (responseData && responseData.EC === 0) {
         notification.success({
           message: "Update Successful",
@@ -313,7 +310,7 @@ const PropertiesPage = () => {
                   rows={4}
                 />
               </Form.Item>
-              <Form.Item label="Address" required name="location">
+              <Form.Item label="Address" required name="address">
                 <Input placeholder="Enter property address" />
               </Form.Item>
               <Form.Item label="Amenities" name="amenities">

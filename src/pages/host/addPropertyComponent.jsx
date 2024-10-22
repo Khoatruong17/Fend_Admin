@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Form, Input, Checkbox, Button, Upload, message } from "antd";
+import { Form, Input, Checkbox, Button, notification } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import GoogleAutocomplete from "react-google-autocomplete";
+import { createNewProperties } from "../../util/host/apiHost";
 
 const amenitiesOptions = [
   "WiFi",
@@ -23,32 +24,31 @@ const AddPropertyForm = () => {
   });
 
   const onFinish = async () => {
-    const formDataToSend = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      formDataToSend.append(key, value);
-    });
-
+    console.log("Check data: ", formData);
     try {
-      const response = await fetch("/api/properties", {
-        method: "POST",
-        body: formDataToSend,
-      });
-      const data = await response.json();
-      message.success("Thêm bất động sản thành công!");
+      const response = await createNewProperties(formData);
+      if (response && response.EC === 0) {
+        notification.success({
+          message: "Add Property Successful",
+          description: `Property ${response.data.name} added successfully!`,
+        });
+      } else {
+        notification.error({
+          message: "Add Property Failed",
+          description:
+            response.message || "An error occurred while adding the property",
+        });
+      }
     } catch (error) {
       console.error("Error:", error);
-      message.error("Có lỗi xảy ra khi thêm bất động sản.");
-    }
-  };
-
-  const handleImageChange = (info) => {
-    if (info.file.status === "done") {
-      setFormData((prev) => ({ ...prev, imageUrl: info.file.response.url }));
+      notification.error({
+        message: "Add Property Failed",
+        description: error || "An error occurred while adding the property",
+      });
     }
   };
 
   const handleChange = (e) => {
-    // Kiểm tra nếu e.target tồn tại
     if (e.target) {
       const { name, value, type, checked } = e.target;
 
@@ -69,20 +69,13 @@ const AddPropertyForm = () => {
     setFormData((prev) => ({ ...prev, amenities: checkedValues }));
   };
 
-  const handleLocationChange = (place) => {
-    setFormData((prev) => ({
-      ...prev,
-      location: place.formatted_address,
-    }));
+  const handleLocationSelect = (place) => {
+    const address = place.formatted_address;
+    setFormData((prev) => ({ ...prev, location: address }));
   };
 
   const isFormComplete = () => {
-    return (
-      formData.name &&
-      formData.description &&
-      formData.amenities.length > 0 &&
-      formData.location
-    );
+    return formData.name && formData.description && formData.address;
   };
 
   return (
@@ -109,6 +102,27 @@ const AddPropertyForm = () => {
           rows={4}
         />
       </Form.Item>
+      <Form.Item label="Address" required>
+        <Input
+          name="address"
+          placeholder="Enter property address"
+          onChange={handleChange}
+          rows={4}
+        />
+      </Form.Item>
+      {/* <Form.Item label="Property Address" required>
+        <GoogleAutocomplete
+          apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+          placeholder="Enter property address"
+          onPlaceSelected={handleLocationSelect}
+          options={{
+            types: ["address"],
+            componentRestrictions: { country: "us" }, // Adjust country if needed
+          }}
+          style={{ width: "100%" }}
+        />
+      </Form.Item> */}
+
       <Form.Item label="Amenities">
         <Checkbox.Group onChange={handleAmenitiesChange}>
           {amenitiesOptions.map((amenity) => (
@@ -117,20 +131,6 @@ const AddPropertyForm = () => {
             </Checkbox>
           ))}
         </Checkbox.Group>
-      </Form.Item>
-
-      <Form.Item label="Hình ảnh">
-        <Upload name="avatar" listType="picture" onChange={handleImageChange}>
-          <Button icon={<UploadOutlined />}>Click để chọn hình</Button>
-        </Upload>
-      </Form.Item>
-      <Form.Item label="Vị trí" required>
-        <GoogleAutocomplete
-          onPlaceSelected={handleLocationChange}
-          style={{ width: "100%" }}
-          placeholder="Tìm kiếm địa chỉ"
-          // Include your Google Maps API key and other necessary props
-        />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" disabled={!isFormComplete()}>
