@@ -73,7 +73,6 @@ const PropertiesPage = () => {
 
   const handleEdit = (property) => {
     setSelectedPT(property);
-    console.log(property);
     form.setFieldsValue({
       name: property.name, // Property name
       description: property.description, // Property description
