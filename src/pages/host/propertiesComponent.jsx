@@ -11,6 +11,7 @@ import {
   Tag,
   Form,
   Checkbox,
+  Switch,
 } from "antd";
 import {
   EditOutlined,
@@ -73,12 +74,13 @@ const PropertiesPage = () => {
 
   const handleEdit = (property) => {
     setSelectedPT(property);
+    console.log(property);
     form.setFieldsValue({
       name: property.name, // Property name
       description: property.description, // Property description
       location: property.location,
       amenities: property.amenities || [], // Pre-select amenities
-      is_active: property.is_active,
+      status: property.status,
     });
     setIsModalVisible(true);
   };
@@ -177,7 +179,7 @@ const PropertiesPage = () => {
       key: "verify",
       render: (_, { isCheck }) => (
         <Tag color={isCheck ? "green" : "red"}>
-          {isCheck ? "Active" : "Hidden"}
+          {isCheck ? "Verify" : "Not Verify"}
         </Tag>
       ),
     },
@@ -185,8 +187,7 @@ const PropertiesPage = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Space size="middle">
-          <Button icon={<UnorderedListOutlined />} type="link" />
+        <Space size="right">
           <Button
             icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
@@ -324,6 +325,15 @@ const PropertiesPage = () => {
                     </Checkbox>
                   ))}
                 </Checkbox.Group>
+              </Form.Item>
+
+              {/* Add a switch for the status */}
+              <Form.Item label="Status" name="status">
+                <Switch
+                  checkedChildren="Active"
+                  unCheckedChildren="Hidden"
+                  defaultChecked={selectedPT?.status} // Set the current status value
+                />
               </Form.Item>
             </Form>
           </Modal>

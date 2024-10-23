@@ -1,10 +1,18 @@
 import React, { useState } from "react";
-import { Form, Input, Checkbox, Button, notification } from "antd";
+import {
+  Form,
+  Input,
+  Checkbox,
+  Button,
+  notification,
+  Modal,
+  Space,
+} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import GoogleAutocomplete from "react-google-autocomplete";
 import { createNewProperties } from "../../util/host/apiHost";
 
-const amenitiesOptions = [
+const amenitiesOptionsInitial = [
   "WiFi",
   "Parking",
   "Air Conditioning",
@@ -22,6 +30,11 @@ const AddPropertyForm = () => {
     location: "",
     imageUrl: null,
   });
+  const [amenitiesOptions, setAmenitiesOptions] = useState(
+    amenitiesOptionsInitial
+  );
+  const [newAmenity, setNewAmenity] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const onFinish = async () => {
     console.log("Check data: ", formData);
@@ -46,6 +59,25 @@ const AddPropertyForm = () => {
         description: error || "An error occurred while adding the property",
       });
     }
+  };
+
+  const handleAddAmenity = () => {
+    if (newAmenity && !amenitiesOptions.includes(newAmenity)) {
+      setAmenitiesOptions([...amenitiesOptions, newAmenity]);
+      setNewAmenity(""); // Reset input field
+    }
+  };
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleModalOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
   };
 
   const handleChange = (e) => {
@@ -131,7 +163,39 @@ const AddPropertyForm = () => {
             </Checkbox>
           ))}
         </Checkbox.Group>
+        <Button type="primary" onClick={showModal}>
+          Add
+        </Button>
       </Form.Item>
+
+      {/* Input for custom amenities */}
+      <Modal
+        title="Add custom amenity"
+        open={isModalVisible}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+        width={400} // Adjust width if necessary
+      >
+        <Form>
+          {/* Amenities checkbox and custom amenity input on the same line */}
+          <Form.Item label="Amenities">
+            <Space direction="horizontal" align="start">
+              <Space direction="horizontal" style={{ marginLeft: "10px" }}>
+                <Input
+                  placeholder="Add new amenity"
+                  value={newAmenity}
+                  onChange={(e) => setNewAmenity(e.target.value)}
+                  onPressEnter={handleAddAmenity}
+                  style={{ width: "200px" }}
+                />
+                <Button type="primary" onClick={handleAddAmenity}>
+                  Add
+                </Button>
+              </Space>
+            </Space>
+          </Form.Item>
+        </Form>
+      </Modal>
       <Form.Item>
         <Button type="primary" htmlType="submit" disabled={!isFormComplete()}>
           Create Property
