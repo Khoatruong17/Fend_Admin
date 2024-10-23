@@ -14,7 +14,8 @@ const { Header, Content, Footer, Sider } = Layout;
 import InforHoster from "./inforHosterPage";
 import Dashboard from "./dashBroadHostComponent";
 import AddPropertiesFrom from "./addPropertyComponent";
-import PropertiesPage from "./propertiesComponent"
+import PropertiesPage from "./propertiesComponent";
+import Map from "./map";
 
 const items = [
   {
@@ -29,7 +30,8 @@ const items = [
     children: [
       { key: "1", label: "Add Properties" },
       { key: "2", label: "List Properties" },
-      { key: "3", label: "List Order" },
+      { key: "3", label: "Type Room" },
+      { key: "4", label: "Map" },
     ],
   },
   {
@@ -37,8 +39,8 @@ const items = [
     icon: <NotificationOutlined />,
     label: "Comments",
     children: [
-      { key: "4", label: "Comment List" },
-      { key: "5", label: "Moderate Comments" },
+      { key: "5", label: "Comment List" },
+      { key: "6", label: "Moderate Comments" },
     ],
   },
   {
@@ -46,8 +48,8 @@ const items = [
     icon: <LineChartOutlined />,
     label: "Statistics",
     children: [
-      { key: "6", label: "Revenue Reports" },
-      { key: "7", label: "User Statistics" },
+      { key: "7", label: "Revenue Reports" },
+      { key: "8", label: "User Statistics" },
     ],
   },
   {
@@ -55,8 +57,8 @@ const items = [
     icon: <SettingOutlined />,
     label: "Settings",
     children: [
-      { key: "8", label: "Account" },
-      { key: "9", label: "Payment" },
+      { key: "9", label: "Account" },
+      { key: "10", label: "Payment" },
     ],
   },
 ];
@@ -105,7 +107,7 @@ const App = () => {
             animate={{ opacity: 2 }}
             exit={{ opacity: 0 }}
           >
-            <PropertiesPage/>
+            <PropertiesPage />
           </motion.div>
         );
       case "3":
@@ -113,16 +115,27 @@ const App = () => {
           <motion.div
             key="3"
             initial={{ opacity: 0 }}
+            animate={{ opacity: 3 }}
+            exit={{ opacity: 0 }}
+          >
+            <h1>Manager Type Room</h1>
+          </motion.div>
+        );
+      case "4":
+        return (
+          <motion.div
+            key="4"
+            initial={{ opacity: 0 }}
             animate={{ opacity: 2 }}
             exit={{ opacity: 0 }}
           >
-            <h1>Manage Bans</h1>
+            <Map />
           </motion.div>
         );
-      case "8":
+      case "9":
         return (
           <motion.div
-            key="8"
+            key="9"
             initial={{ opacity: 0 }}
             animate={{ opacity: 2 }}
             exit={{ opacity: 0 }}
