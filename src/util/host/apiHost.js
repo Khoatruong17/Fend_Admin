@@ -21,6 +21,16 @@ const updateProperty = (property_id, data) => {
   return axios.put(URL_API, data);
 };
 
+const getListP = () => {
+  const URL_API = "v1/apiHost/getListP";
+  return axios.get(URL_API);
+};
+
+const getAllTypeRooms = (property_id) => {
+  const URL_API = `/v1/apiHost/getRoomTypeByPId/${property_id}`;
+  return axios.get(URL_API);
+};
+
 // const getHostByIdApi = (userId) => {
 //   const URL_API = `/v1/apiAdmin/getHost/${userId}`;
 //   return axios.get(URL_API);
@@ -35,4 +45,6 @@ export {
   createNewProperties,
   deletedProperties,
   updateProperty,
+  getListP,
+  getAllTypeRooms,
 };

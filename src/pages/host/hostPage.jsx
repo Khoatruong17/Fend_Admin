@@ -15,6 +15,7 @@ import InforHoster from "./inforHosterPage";
 import Dashboard from "./dashBroadHostComponent";
 import AddPropertiesFrom from "./addPropertyComponent";
 import PropertiesPage from "./propertiesComponent";
+import RoomType from "./listRoomTypeComponent";
 import Map from "./map";
 
 const items = [
@@ -119,6 +120,7 @@ const App = () => {
             exit={{ opacity: 0 }}
           >
             <h1>Manager Type Room</h1>
+            <RoomType />
           </motion.div>
         );
       case "4":

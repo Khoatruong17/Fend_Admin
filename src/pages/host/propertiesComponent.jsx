@@ -18,6 +18,7 @@ import {
   DeleteOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../../components/context/auth.context";
 import {
@@ -25,6 +26,7 @@ import {
   deletedProperties,
   updateProperty,
 } from "../../util/host/apiHost"; // Ensure updateUserByIdApi is imported
+import RoomType from "./listRoomTypeComponent";
 
 const { Search } = Input;
 
@@ -39,6 +41,7 @@ const amenitiesOptions = [
 ];
 
 const PropertiesPage = () => {
+  const _id = "";
   const { auth, setAuth, appLoading, setAppLoading } = useContext(AuthContext);
   const [filteredData, setFilteredData] = useState([]);
   const [data, setData] = useState([]);
@@ -46,6 +49,8 @@ const PropertiesPage = () => {
   const [selectedPT, setSelectedPT] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const [showRoomType, setShowRoomType] = useState(false);
+  const [propertyId, setPropertyId] = useState(null);
 
   const fetchAccount = async () => {
     setLoading(true); // Show loading before fetching data
@@ -70,7 +75,7 @@ const PropertiesPage = () => {
 
   useEffect(() => {
     fetchAccount(); // Call the function on initial load
-  }, []);
+  }, [selectedPT]);
 
   const handleEdit = (property) => {
     setSelectedPT(property);
@@ -183,6 +188,7 @@ const PropertiesPage = () => {
         </Tag>
       ),
     },
+
     {
       title: "Action",
       key: "action",
@@ -261,35 +267,6 @@ const PropertiesPage = () => {
         </div>
       ) : (
         <>
-          <h1>List Properties of</h1>
-          <div
-            style={{
-              marginBottom: 20,
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Search
-              placeholder="Search name of property..."
-              onSearch={handleSearch}
-              style={{ width: "300px" }}
-            />
-            <Button onClick={fetchAccount} type="primary">
-              Refresh
-            </Button>
-          </div>
-          <Table
-            columns={columns}
-            dataSource={Array.isArray(filteredData) ? filteredData : []} // Ensure it's always an array
-            pagination={pagination}
-            loading={loading}
-            rowKey="_id"
-            onChange={handleTableChange}
-            locale={{
-              emptyText: "No data available",
-            }} /* Custom 'No Data' message */
-          />
-
           {/* Modal for editing property */}
           <Modal
             title="Edit Property"
@@ -337,6 +314,34 @@ const PropertiesPage = () => {
               </Form.Item>
             </Form>
           </Modal>
+          <h1>List Properties</h1>
+          <div
+            style={{
+              marginBottom: 20,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Search
+              placeholder="Search name of property..."
+              onSearch={handleSearch}
+              style={{ width: "300px" }}
+            />
+            <Button onClick={fetchAccount} type="primary">
+              Refresh
+            </Button>
+          </div>
+          <Table
+            columns={columns}
+            dataSource={Array.isArray(filteredData) ? filteredData : []}
+            pagination={pagination}
+            loading={loading}
+            rowKey="_id"
+            onChange={handleTableChange}
+            locale={{
+              emptyText: "No data available",
+            }}
+          />
         </>
       )}
     </>

@@ -10,105 +10,30 @@ import {
   Popconfirm,
   Tag,
   Form,
-  Checkbox,
+  Select,
 } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-
 import { AuthContext } from "../../components/context/auth.context";
-import { getRT } from "../../util/host/apiHost"; // Ensure updateUserByIdApi is imported
+import { getListP, getAllTypeRooms } from "../../util/host/apiHost";
+import RoomTypeModal from "./roomTypeModal";
 
 const { Search } = Input;
 
-const amenitiesOptions = [
-  "WiFi",
-  "Parking",
-  "Air Conditioning",
-  "Pool",
-  "Gym",
-  "Breakfast",
-  // Add more amenities as needed
-];
-
-const RoomType = ({ onBack, property_id }) => {
-  const { auth, setAuth, appLoading, setAppLoading } = useContext(AuthContext);
+const RoomType = () => {
+  const { appLoading } = useContext(AuthContext);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editingRoom, setEditingRoom] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPT, setSelectedPT] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
-
-  const fetchAccount = async () => {
-    setLoading(true); // Show loading before fetching data
-
-    try {
-      console.log(property_id);
-      const responseData = await getRT();
-      console.log(responseData);
-      setFilteredData(responseData);
-      if (Array.isArray(responseData.data)) {
-        setData(responseData.data); // Set the original data
-        setFilteredData(responseData.data); // Set the filtered data (initially the same)
-      } else {
-        console.error("Response data is not an array:", responseData.data);
-        setFilteredData([]); // Fallback to empty array if the data is not valid
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setFilteredData([]); // Handle error state
-    }
-
-    setLoading(false); // Turn off loading once the data is fetched
-  };
-
-  useEffect(() => {
-    fetchAccount(); // Call the function on initial load
-  }, []);
-
-  const handleEdit = (property) => {
-    setSelectedPT(property);
-    form.setFieldsValue({
-      name: property.name, // Property name
-      description: property.description, // Property description
-      address: property.location, // Property address
-      amenities: property.amenities || [], // Pre-select amenities
-      is_active: property.is_active,
-    });
-    setIsModalVisible(true);
-  };
-
-  const handleDelete = async (property_id) => {
-    try {
-      const responseData = await deletedProperties(property_id); // Fetch the data
-      if (responseData && responseData.EC === 0) {
-        notification.success({
-          message: "Deleted Successful",
-          description: `Properties ${responseData.data.name} deleted successfully!`,
-        });
-        fetchAccount();
-      } else {
-        notification.error({
-          message: "Deleted Failed",
-          description:
-            responseData?.message || "An error occurred while adding the host.",
-        }); // Fallback to empty array if the data is not valid
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const handleSearch = (value) => {
-    const filtered = data.filter((typeofRoom) =>
-      typeofRoom?.typeOfRoom?.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredData(filtered);
-  };
-
+  const [properties, setProperties] = useState([]);
+  const [selectedProperty, setSelectedProperty] = useState(null);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -116,16 +41,79 @@ const RoomType = ({ onBack, property_id }) => {
     pageSizeOptions: ["5", "10", "20", "50", "100"],
   });
 
+  const fetchAccount = async () => {
+    setLoading(true);
+    try {
+      const response = await getListP();
+      if (response.EC === 0) {
+        setProperties(response.data);
+      } else {
+        console.error("Error fetching properties:", response.message);
+      }
+    } catch (error) {
+      console.error("Error fetching properties:", error);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchAccount();
+  }, []);
+
+  const handleSearch = (value) => {
+    const filtered = data.filter((room) =>
+      room?.typeOfRoom?.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredData(filtered);
+  };
+
   const handleTableChange = (pagination) => {
     setPagination(pagination);
   };
 
+  const handlePropertyChange = async (propertyId) => {
+    setSelectedProperty(propertyId);
+    try {
+      const response = await getAllTypeRooms(propertyId);
+      if (response.EC === 0) {
+        setData(response.data);
+        setFilteredData(response.data);
+      } else {
+        console.error("Error fetching type rooms:", response.message);
+      }
+    } catch (error) {
+      console.error("Error fetching type rooms:", error);
+    }
+  };
+
+  const openAddModal = () => {
+    setEditingRoom(null); // Reset for adding
+    setModalVisible(true);
+  };
+
+  const openEditModal = (room) => {
+    setEditingRoom(room); // Set the room to edit
+    setModalVisible(true);
+  };
+
+  const handleModalCancel = () => {
+    setModalVisible(false);
+  };
+
+  const handleModalSubmit = async (formData) => {
+    if (editingRoom) {
+      // Edit case
+      await addOrEditRoom({ ...formData, id: editingRoom._id });
+    } else {
+      // Add case
+      await addOrEditRoom(formData);
+    }
+    // Refresh the data after success
+    fetchData();
+  };
+
   const columns = [
-    {
-      title: "No",
-      key: "stt",
-      render: (_, __, index) => index + 1,
-    },
+    { title: "No", key: "stt", render: (_, __, index) => index + 1 },
     {
       title: "Image",
       dataIndex: "images",
@@ -136,20 +124,12 @@ const RoomType = ({ onBack, property_id }) => {
         return firstImage ? (
           <img src={firstImage} alt="Property" style={{ width: 100 }} />
         ) : (
-          <span>No Image</span> // Optional: handle case when there's no image
+          <span>No Image</span>
         );
       },
     },
-    {
-      title: "Type Room",
-      dataIndex: "typeOfRoom",
-      key: "typeOfRoom",
-    },
-    {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
-    },
+    { title: "Type Room", dataIndex: "typeOfRoom", key: "typeOfRoom" },
+    { title: "Price", dataIndex: "price", key: "price" },
     {
       title: "Amenities",
       dataIndex: "amenities",
@@ -157,7 +137,6 @@ const RoomType = ({ onBack, property_id }) => {
       render: (amenities) =>
         Array.isArray(amenities) ? amenities.join(", ") : "",
     },
-
     {
       title: "Status",
       dataIndex: "status",
@@ -173,10 +152,9 @@ const RoomType = ({ onBack, property_id }) => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button icon={<UnorderedListOutlined />} type="link" />
           <Button
             icon={<EditOutlined />}
-            onClick={() => handleEdit(record)}
+            onClick={() => openEditModal(record)}
             type="link"
           />
           <Popconfirm
@@ -192,87 +170,84 @@ const RoomType = ({ onBack, property_id }) => {
     },
   ];
 
-  const handleAmenitiesChange = (checkedValues) => {
-    console.log("Selected Amenities: ", checkedValues);
-  };
-
-  const handleModalOk = async () => {
-    try {
-      const values = await form.validateFields();
-      const responseData = await updateProperty(selectedPT._id, values);
-      if (responseData && responseData.EC === 0) {
-        notification.success({
-          message: "Update Successful",
-          description: `Property ${responseData.data.name} updated successfully!`,
-        });
-        fetchAccount();
-        setIsModalVisible(false);
-      } else {
-        notification.error({
-          message: "Update Failed",
-          description:
-            responseData?.message ||
-            "An error occurred while updating the property.",
-        });
-      }
-    } catch (error) {
-      console.error("Error updating property:", error);
-      notification.error({
-        message: "Update Failed",
-        description: "Please check the form fields.",
-      });
-    }
-  };
-
-  const handleModalCancel = () => {
-    setIsModalVisible(false); // Close modal
-  };
-
-  return (
+  return appLoading ? (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        backgroundColor: "#f0f2f5",
+      }}
+    >
+      <Spin size="large" />
+    </div>
+  ) : (
     <>
-      {appLoading ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-            backgroundColor: "#f0f2f5",
-          }}
-        >
-          <Spin size="large" />
-        </div>
-      ) : (
-        <>
-          <div
+      <div
+        style={{
+          marginBottom: 20,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+        }}
+      >
+        <Button type="primary" onClick={openAddModal}>
+          Add Room Type
+        </Button>
+        <div style={{ marginTop: "10px" }}>
+          <Select
+            showSearch
+            placeholder="Select Property"
             style={{
-              marginBottom: 20,
-              display: "flex",
-              justifyContent: "space-between",
+              width: "500px",
             }}
+            onChange={handlePropertyChange}
+            value={selectedProperty}
+            filterOption={(input, option) =>
+              option.children.toLowerCase().includes(input.toLowerCase())
+            }
           >
-            <Search
-              placeholder="Search name of property..."
-              onSearch={handleSearch}
-              style={{ width: "300px" }}
-            />
-            <Button onClick={fetchAccount} type="primary">
-              Refresh
-            </Button>
-          </div>
-          <Button onClick={onBack} type="primary" style={{ marginBottom: 20 }}>
-            Back to Properties
-          </Button>
-          <Table
-            columns={columns}
-            dataSource={Array.isArray(filteredData) ? filteredData : []}
-            pagination={pagination}
-            loading={loading}
-            rowKey="_id"
-            onChange={handleTableChange}
-          />
-        </>
-      )}
+            {properties.map((property) => (
+              <Select.Option key={property._id} value={property._id}>
+                {property.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </div>
+      </div>
+      <div
+        style={{
+          marginBottom: 20,
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Search
+          placeholder="Search name of property..."
+          onSearch={handleSearch}
+          style={{ width: "500px" }}
+        />
+        <Button onClick={fetchAccount} type="primary">
+          Refresh
+        </Button>
+      </div>
+      <Table
+        columns={columns}
+        dataSource={Array.isArray(filteredData) ? filteredData : []}
+        pagination={pagination}
+        loading={loading}
+        rowKey="_id"
+        onChange={handleTableChange}
+      />
+
+      <RoomTypeModal
+        visible={modalVisible}
+        onCancel={handleModalCancel}
+        onSubmit={handleModalSubmit}
+        roomData={editingRoom}
+        properties={properties} // Pass properties to modal
+      />
     </>
   );
 };
